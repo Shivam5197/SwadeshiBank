@@ -1,5 +1,6 @@
 package com.bank.SwadeshiBank.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,17 +17,19 @@ public class Accounts extends BaseEntity{
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
     private Long accountNumber;
 
-    private Long customerId;
+    private String ifscCode;
+    private Long userId;
     private String accountType;
     private String branchAddress;
     private String branchState;
     private String branchCity;
     private String branchPincode;
-    private Integer balanceAmount;
-    private Integer minimumAmountRequired;
+    private Long balanceAmount;
+    private Boolean netBanking;
+    private Long initialFunds;
 
-
+    
 }

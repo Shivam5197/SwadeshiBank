@@ -6,8 +6,9 @@ import com.bank.SwadeshiBank.Entity.Card;
 public class CardsMapper {
 
 
-    public static CardsDTO mapToCardsDTO(CardsDTO cardsDTO, Card card){
-
+    public static CardsDTO mapToCardsDTO( Card card){
+    	CardsDTO cardsDTO = new CardsDTO();
+    	cardsDTO.setCardId(card.getCardId());
         cardsDTO.setCardType(card.getCardType());
         cardsDTO.setCardNumber(card.getCardNumber());
         cardsDTO.setRemainingCardAmount(card.getRemainingCardAmount());
@@ -20,8 +21,10 @@ public class CardsMapper {
     }
 
 
-    public static Card mapToCards(CardsDTO cardsDTO, Card card){
+    public static Card mapToCards(CardsDTO cardsDTO){
 
+    	Card card = new Card();
+    	
         card.setCardType(cardsDTO.getCardType());
         card.setCardNumber(cardsDTO.getCardNumber());
         card.setRemainingCardAmount(cardsDTO.getRemainingCardAmount());

@@ -1,53 +1,86 @@
 package com.bank.SwadeshiBank.Mapper;
 
-import com.bank.SwadeshiBank.Constants.Constants;
 import com.bank.SwadeshiBank.DTO.UserDTO;
 import com.bank.SwadeshiBank.Entity.Users;
-import com.bank.SwadeshiBank.Utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 public class UserMapper {
 
     private static final Logger log = LogManager.getLogger(UserMapper.class);
 
-    public static Users mapToUsersEntity(UserDTO userDTO , Users users, List<String> errorList){
-        log.debug("mapToCustomerEntity:     ---> {}", userDTO.toString());
-        users.setFirstName(userDTO.getFirstName());
-        users.setLastName(userDTO.getLastName());
-//        users.setActive(user);
-        users.setAge(userDTO.getAge());
-        users.setAddharNumber(userDTO.getAadharNumber());
-        users.setPanNumber(userDTO.getPanNumber());
-        users.setMobileNumber(userDTO.getMobileNumber());
-        users.setAddress(userDTO.getAddress());
-        users.setCity(userDTO.getCity());
-        users.setPinCode(userDTO.getPinCode());
-        users.setState(userDTO.getState());
-        users.setUserName(userDTO.getUserName());
-        users.setProfession(userDTO.getProfession());
-        return users;
+ 
+
+    public static Users mapToUsersEntity(UserDTO userDTO){
+    	
+    	Users user = new Users();
+    	
+    	user.setFullname(userDTO.getFullname());
+    	user.setUserName(userDTO.getUserName());
+    	user.setPassword(userDTO.getPassword());
+    	user.setFatherName(userDTO.getFatherName());
+    	user.setMotherName(userDTO.getMotherName());
+    	user.setDateOfBirth(userDTO.getDateOfBirth());
+    	user.setGender(userDTO.getGender());
+    	user.setMaritalStatus(userDTO.getMaritalStatus());
+    	user.setCategory(userDTO.getCategory());
+    	user.setMobileNumber(userDTO.getMobileNumber());
+    	user.setEmail(userDTO.getEmail());
+    	user.setAddress(userDTO.getAddress());
+    	user.setState(userDTO.getState());
+    	user.setCity(userDTO.getCity());
+    	user.setPinCode(userDTO.getPinCode());
+    	user.setAadharNumber(userDTO.getAadharNumber());
+    	user.setPanNumber(userDTO.getPanNumber());
+    	user.setActive(userDTO.isActive());
+    	user.setOccupation(userDTO.getOccupation());
+    	user.setOrganisation(userDTO.getOrganisation());
+    	user.setAnnualIncome(userDTO.getAnnualIncome());
+
+    	user.setNominieFullName(userDTO.getNominieFullName());
+    	user.setNominieRelation(userDTO.getNominieRelation());
+    	user.setNominieAadharNumber(userDTO.getNominieAadharNumber());
+    	user.setNominiePanNumber(userDTO.getNominiePanNumber());
+    	user.setNominieMobileNumber(userDTO.getNominieMobileNumber());
+    	
+    	return user;
     }
-    public static UserDTO mapToUsersDTO(UserDTO userDTO , Users users, List<String> errorList){
-            userDTO.setFirstName(users.getFirstName());
-            userDTO.setLastName(users.getLastName());
-            userDTO.setActive(users.isActive());
-            userDTO.setAge(users.getAge());
-            userDTO.setAadharNumber(users.getAddharNumber());
-            userDTO.setPanNumber(users.getPanNumber());
-            userDTO.setMobileNumber(users.getMobileNumber());
-            userDTO.setAddress(users.getAddress());
-            userDTO.setCity(users.getCity());
-            userDTO.setPinCode(users.getPinCode());
-            userDTO.setState(users.getState());
-            userDTO.setUserName(users.getUserName());
-            userDTO.setProfession(users.getProfession());
-        return userDTO;
+    
+    
+    public static UserDTO mapToUsersDTO(Users user){
+    	UserDTO userDTO = new UserDTO();
+    	
+    	userDTO.setUserId(user.getUserId());
+    	userDTO.setFullname(user.getFullname());
+    	userDTO.setUserName(user.getUserName());
+    	userDTO.setPassword(user.getPassword());
+    	userDTO.setFatherName(user.getFatherName());
+    	userDTO.setMotherName(user.getMotherName());
+    	userDTO.setDateOfBirth(user.getDateOfBirth());
+    	userDTO.setGender(user.getGender());
+    	userDTO.setMaritalStatus(user.getMaritalStatus());
+    	userDTO.setCategory(user.getCategory());
+    	userDTO.setMobileNumber(user.getMobileNumber());
+    	userDTO.setEmail(user.getEmail());
+    	userDTO.setAddress(user.getAddress());
+    	userDTO.setState(user.getState());
+    	userDTO.setCity(user.getCity());
+    	userDTO.setPinCode(user.getPinCode());
+    	userDTO.setAadharNumber(user.getAadharNumber());
+    	userDTO.setPanNumber(user.getPanNumber());
+    	userDTO.setActive(user.isActive());
+    	userDTO.setOccupation(user.getOccupation());
+    	userDTO.setOrganisation(user.getOrganisation());
+    	userDTO.setAnnualIncome(user.getAnnualIncome());
+
+    	userDTO.setNominieFullName(user.getNominieFullName());
+    	userDTO.setNominieRelation(user.getNominieRelation());
+    	userDTO.setNominieAadharNumber(user.getNominieAadharNumber());
+    	userDTO.setNominiePanNumber(user.getNominiePanNumber());
+    	userDTO.setNominieMobileNumber(user.getNominieMobileNumber());
+
+    	
+    	return userDTO;
     }
-
-
-
 
 }

@@ -1,21 +1,22 @@
 package com.bank.SwadeshiBank.Services.Impl;
 
 import com.bank.SwadeshiBank.Constants.Constants;
+import com.bank.SwadeshiBank.Controllers.UsersController;
 import com.bank.SwadeshiBank.Entity.Accounts;
 import com.bank.SwadeshiBank.Entity.Users;
 import com.bank.SwadeshiBank.Mapper.AccountsMapper;
 import com.bank.SwadeshiBank.Repository.AccountsRepository;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
+import com.bank.SwadeshiBank.DTO.UserDTO;
 import com.bank.SwadeshiBank.Services.AccountsService;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @Service
@@ -23,43 +24,59 @@ import java.util.List;
 @Transactional
 public class AccountsServiceImpl implements AccountsService {
 
+	private static final Logger log = LogManager.getLogger(AccountsServiceImpl.class);
 
-    @Autowired
-    AccountsRepository accountsRepository;
+	@Autowired
+	AccountsRepository accountsRepository;
 
-    @Override
-    public AccountsDTO createAccount(Users users, AccountsDTO accountsDTO, List<String> errorList) {
-        AccountsDTO newAccountDTO = new AccountsDTO();
+	@Override
+	public AccountsDTO createAccount(Users users, UserDTO userDto ,List<String> errorList) {
 
-        try {
-            // Check if the user is not null and is active
-            if (!Utils.isNull(users) && users.isActive()) {
-                if (Utils.isNull(accountsDTO)) {
-                    // Create a new account with default values
-                    newAccountDTO.setAccountNumber(RandomStringGenerator.generateRandomNumeric(12));
-                    newAccountDTO.setBranchPincode("201005");
-                    newAccountDTO.setBranchState("Uttar Pradesh");
-                    newAccountDTO.setBranchCity("Ghaziabad");
-                    newAccountDTO.setAccountType(Constants.AccountType.SAVINGS_ACCOUNT);
-                    newAccountDTO.setBranchAddress("C-1008 Kalash Homes");
-                    newAccountDTO.setMinimumAmountRequired(1000);
-                    newAccountDTO.setBalanceAmount(1000);
-                } else {
-                    // Set account number and map DTO to Accounts entity
-                    accountsDTO.setAccountNumber(RandomStringGenerator.generateRandomNumeric(12));
-                    Accounts accounts = AccountsMapper.mapToAccounts(accountsDTO, new Accounts());
+		log.info("Hi Welcome to the Create Account Method !!  The values you came with are : {} ",
+				users + " And for error List we have : {}", errorList);
 
-                    // Save the account and map back to DTO
-                    accounts = accountsRepository.save(accounts);
-                    newAccountDTO = AccountsMapper.mapToAccountsDTO(accountsDTO, accounts);
-                }
-            }
-        } catch (Exception e) {
-            errorList.add("Something went wrong, please try again later.");
-            e.printStackTrace();
-        }
-        return newAccountDTO;
-    }
+		AccountsDTO accountDTO = new AccountsDTO();
 
+		try {
+			if (!Utils.isNull(users.getUserId()) && users.isActive()) {
+				log.info("If condition passed in Create Account method !!");
+				
+				// Create a new account with default values
+				accountDTO.setAccountNumber(RandomStringGenerator.generateRandomNumeric(12));
+				accountDTO.setBranchPincode(userDto.getBranchPincode());
+				accountDTO.setBranchState(userDto.getBranchState());
+				accountDTO.setBranchCity(userDto.getBranchCity());
+				accountDTO.setAccountType(userDto.getAccountType());
+				accountDTO.setBranchAddress(userDto.getBranchAddress());
+				accountDTO.setIfscCode(RandomStringGenerator.generateRandomAlphanumeric(7).toUpperCase());
+				accountDTO.setBalanceAmount(userDto.getInitialFunds());
+				accountDTO.setInitialFunds(userDto.getInitialFunds());
+				accountDTO.setNetBanking(true);
+
+			
+				
+
+				Accounts newCreatedAccount = AccountsMapper.mapToAccounts(accountDTO);
+
+				newCreatedAccount.setUserId(users.getUserId());
+				
+				log.info("New Created account details to be saved are : {}", newCreatedAccount);
+				
+				
+				accountsRepository.save(newCreatedAccount);
+
+				accountDTO = AccountsMapper.mapToAccountsDTO(newCreatedAccount);
+
+			}else {
+				errorList.add("Cannot find the user for "+users.getFullname()+ " with username : " +users.getUserName()+" Please try again later or raise a ticket for this issue");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			errorList.add("Something went wrong while adding account for "+users.getFullname()+ "Please try again later or raise a ticket for this issue");
+		}
+
+		return accountDTO;
+	}
 
 }

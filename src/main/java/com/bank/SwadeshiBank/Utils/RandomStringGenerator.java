@@ -8,6 +8,7 @@ public class RandomStringGenerator {
     private static final String NUMERIC = "0123456789";
     private static final String ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final String ALPHANUMERIC_SPECIAL = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()-_=+[]{}|;:'\",.<>?/";
+    private static final String DOMAIN = "gmail.com";
 
     private static final Random RANDOM = new SecureRandom();
 
@@ -53,10 +54,22 @@ public class RandomStringGenerator {
         return result.toString();
     }
 
-//    public static void main(String[] args) {
-//        // Example usage
-//        System.out.println("Random Numeric Long: " + generateRandomNumeric(10));
-//        System.out.println("Random Alphanumeric String: " + generateRandomAlphanumeric(10));
-//        System.out.println("Random Alphanumeric with Special Characters String: " + generateRandomAlphanumericSpecial(10));
-//    }
+    public static String generateEmail(int charCount) {
+        if (charCount < DOMAIN.length() + 1) {
+            throw new IllegalArgumentException("Character count must be greater than the length of the domain plus one character.");
+        }
+
+        StringBuilder email = new StringBuilder();
+        Random random = new Random();
+
+        int localPartLength = charCount - DOMAIN.length() - 1; // Subtract domain length and '@' character
+
+        for (int i = 0; i < localPartLength; i++) {
+            email.append(ALPHANUMERIC.charAt(random.nextInt(ALPHANUMERIC.length())));
+        }
+
+        email.append("@").append(DOMAIN);
+
+        return email.toString();
+    }
 }

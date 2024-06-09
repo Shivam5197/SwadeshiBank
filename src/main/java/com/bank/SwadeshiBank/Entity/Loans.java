@@ -1,6 +1,7 @@
 package com.bank.SwadeshiBank.Entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Loans extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long loanId;
     private String mobileNumber;
+    @Column(unique = true)
     private String loanNumber;
     private String loanType;
     private Integer totalLoan;

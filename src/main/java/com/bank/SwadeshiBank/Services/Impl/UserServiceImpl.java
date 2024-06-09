@@ -1,18 +1,23 @@
 package com.bank.SwadeshiBank.Services.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bank.SwadeshiBank.Constants.Constants;
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
+import com.bank.SwadeshiBank.DTO.CardsDTO;
 import com.bank.SwadeshiBank.Entity.Authority;
 import com.bank.SwadeshiBank.Entity.Users;
 import com.bank.SwadeshiBank.Mapper.UserMapper;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bank.SwadeshiBank.DTO.UserDTO;
 import com.bank.SwadeshiBank.Repository.UsersRepository;
@@ -21,80 +26,204 @@ import com.bank.SwadeshiBank.Services.CardsService;
 import com.bank.SwadeshiBank.Services.UsersService;
 import com.bank.SwadeshiBank.Utils.Utils;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UsersService {
 
+	private static final Logger log = LogManager.getLogger(UserServiceImpl.class);
 
-    private static final Logger log = LogManager.getLogger(UserServiceImpl.class);
-    @Autowired
-    AccountsService accountService;
+	@Autowired
+	AccountsService accountService;
 
-    @Autowired
-    CardsService cardsService;
+	@Autowired
+	CardsService cardsService;
 
-    @Autowired
-    UsersRepository userRepository;
-
+	@Autowired
+	UsersRepository userRepository;
 
 //	@Autowired
 //	mailService
 
+	@Override
+	public Boolean addNewUser(UserDTO userDto, List<String> errorList) {
+		Boolean isCreated = false;
+		Users userEntity = new Users();
 
-    @Override
-    public UserDTO addNewUser(UserDTO userDto, List<String> errorList) {
-        UserDTO createdUserDto = new UserDTO();
-        Users userEntity = new Users();
+		log.info("Welcome to the add new User method ----------------------------------------------");
+		try {
 
+			if (!Utils.isNull(userDto.getMobileNumber()) & !Utils.isNull(userDto.getAadharNumber())
+					& !Utils.isNull(userDto.getPanNumber())
+					& !Utils.isNull(userDto.getUserName())
+					& !Utils.isNull(userDto.getEmail())) {
+	
+					userEntity = UserMapper.mapToUsersEntity(userDto);
 
-        try {
+						userEntity.setPassword(new BCryptPasswordEncoder()
+								.encode(RandomStringGenerator.generateRandomAlphanumericSpecial(10)));
+						
+						userEntity.setActive(Constants.UserActive.ACTIVE);
+						
+						if(userDto.getUserType().equals(Constants.UserType.ADMIN)) {
+							Authority authority = new Authority();
+							authority.setAuthority(Constants.Authority.ADMIN);
+							userEntity.addAuthority(authority);
+						}else if(userDto.getUserType().equals(Constants.UserType.MANAGER)) {
+							Authority authority = new Authority();
+							authority.setAuthority(Constants.Authority.MANAGER);
+							userEntity.addAuthority(authority);
+						}else {
+							Authority authority = new Authority();
+							authority.setAuthority(Constants.Authority.USER);
+							userEntity.addAuthority(authority);							
+						}
+						
+//						log.info("Entity we are going to save is : ---> {}", userEntity);
+						userEntity = userRepository.save(userEntity);
 
-            if (!Utils.isNull(userDto)) {
-                userEntity = userRepository.findByMobileNumber(userDto.getMobileNumber());
+//						log.info("Saved entity : ---> {}", userEntity);
+						AccountsDTO accountsDTO = accountService.createAccount(userEntity, userDto,errorList);
+						CardsDTO cardDTO = cardsService.createCards(userEntity, accountsDTO, errorList);
+						
+					// Nothing failed so setting isCreated = true;
+						isCreated =true;				
+			} else {
+				errorList.add("Please provide required details!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorList.add("Something Went wrong please try again ! ");
+		}
 
-                try {
-                    if (!Utils.isNull(userEntity)) {
-                        Users newUser = UserMapper.mapToUsersEntity(userDto, userEntity, errorList);
+		log.debug("============================================================== createdUserDto");
 
-                        /*						creatingPasswordToShareWithUsers	*/
-                        String password = "{bcrypt}" + RandomStringGenerator.generateRandomAlphanumericSpecial(10);
-                        log.debug("Generated Password :- >{}", password);
+		return isCreated;
+	}
 
-                        userEntity.setPassword(new BCryptPasswordEncoder().encode(password));
-                        log.debug("encoded Password :- >{}", userEntity.getPassword());
-                        userEntity.setActive(Constants.UserActive.ACTIVE);
-                        Authority authority = new Authority();
-                        authority.setAuthority(Constants.Authority.USER);
-                        userEntity.addAuthority(authority);
+	@Override
+	public UserDTO getUserByMobileNumber(String mobileNumber, List<String> errorList) {
+		UserDTO userDto = new UserDTO();
+		try {
 
-                        newUser = userRepository.save(newUser);
+			Users user = userRepository.findByMobileNumber(mobileNumber);
 
-                        AccountsDTO accountsDTO = accountService.createAccount(newUser, null, errorList);
+			userDto = UserMapper.mapToUsersDTO(user);
 
+		} catch (Exception e) {
+			errorList.add("Customer with given number " + mobileNumber + " Does not exists!");
+			e.printStackTrace();
+		}
 
-                    }
-                } catch (Exception e) {
-                    errorList.add("User with this mobile number already exists !");
-                    throw new RuntimeException(e);
-                }
+		return userDto;
+	}
 
-            } else {
-                errorList.add("Please provide required details!");
-            }
+	@Override
+	public List<UserDTO> getAllUsers(List<String> errorList) {
 
+		List<UserDTO> userDto = new ArrayList<UserDTO>();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            errorList.add("Something Went wrong please try again ! ");
-        }
+		try {
+			List<Users> users = userRepository.findAll();
 
+			for (int i = 0; i < users.size(); i++) {
+				Users user = users.get(i);
+				UserDTO usersDto = UserMapper.mapToUsersDTO(user);
+				userDto.add(usersDto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorList.add("Somethig went wrong !");
+		}
 
-        return null;
-    }
+		return userDto;
+	}
+		
+	public boolean checkDetailsBeforeSavingUsers(UserDTO userDto, List<String> errorList) {
+		
+		boolean isPresent = true;
+		
+		Users user = new Users();
+		
+		/*
+		 * This function is to check if the an user with this unique values present in
+		 * the System or Not
+		 */
+		
+		user = userRepository.findByMobileNumber(userDto.getMobileNumber());
+		if(user.getMobileNumber().isEmpty()) {
+			isPresent =false;
+		}else {
+			isPresent = true;
+			errorList.add("User with this Mobile Number already exist ! Please try another Mobile Number or login!");
+			return isPresent;
+		}
 
+		user = userRepository.findByAadharNumber(userDto.getAadharNumber());
+		if(user.getMobileNumber().isEmpty()) {
+			isPresent =false;
+		}else {
+			isPresent = true;
+			errorList.add("User with this Aadhar number already exist ! Please try another Aadhar number or login!");
+			return isPresent;
+		}
+
+		
+		user = userRepository.findByEmail(userDto.getEmail());
+		if(user.getMobileNumber().isEmpty()) {
+			isPresent =false;
+		}else {
+			isPresent = true;
+			errorList.add("User with this Email Id already exist ! Please try another Email or login!");
+			return isPresent;
+		}
+
+		user = userRepository.findByPanNumber(userDto.getPanNumber());
+		if(user.getMobileNumber().isEmpty()) {
+			isPresent =false;
+		}else {
+			isPresent = true;
+			errorList.add("User with this Pan number already exist ! Please try another Pan number or login!");
+			return isPresent;
+		}
+
+		user = userRepository.findByUserName(userDto.getUserName());
+		if(user.getMobileNumber().isEmpty()) {
+			isPresent =false;
+		}else {
+			isPresent = true;
+			errorList.add("User with this UserName  already exist ! Please try another UserName or login!");
+			return isPresent;
+		}
+
+		return isPresent;
+	}
+
+	@Override
+	public Users getUserByUserName(String userName,List<String> errorList) throws UsernameNotFoundException {
+
+		Users user = new Users();
+		try {
+			
+			if(!Utils.isNull(userName)) {
+				
+				user = userRepository.findByUserName(userName);
+				
+			}else {
+				errorList.add("Username cannot be blank");
+			}
+			
+		} catch (Exception e) {
+			errorList.add("User not found with this username "+ userName);
+			e.printStackTrace();
+			throw new UsernameNotFoundException("User not found with this username "+ userName);
+		}
+		
+		return user;
+	}
+
+	
+	
 }

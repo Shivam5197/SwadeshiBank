@@ -1,6 +1,7 @@
 package com.bank.SwadeshiBank.Entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +23,10 @@ public class Card extends BaseEntity{
 
     private String cardType;
     private Long accountNumber;
-    private Long customerId;
-    private Integer totalCardAmount;
-    private Integer remainingCardAmount;
+    private Long userId;
+    private Long totalCardAmount;
+    private Long remainingCardAmount;
+    @Column(unique = true)
     private Long cardNumber;
     private String expiryDate;
     private Integer cvv;

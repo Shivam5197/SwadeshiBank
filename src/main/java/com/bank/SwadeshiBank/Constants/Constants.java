@@ -27,5 +27,17 @@ public class Constants {
         public static final String CREDIT_CARD = "Credit Card";
         public static final String  DEBIT_CARD= "Debit Card";
     }
+    
+    public static class UserType{
+        public static final Integer  ADMIN= 0;
+    	public static final Integer USER    = 1;
+        public static final Integer  MANAGER= 2;
+    	
+    }
 
+    public static class Gender{
+        public static final String  FEMALE= "Female";
+    	public static final String MALE    = "Male";
+    	
+    }
 }

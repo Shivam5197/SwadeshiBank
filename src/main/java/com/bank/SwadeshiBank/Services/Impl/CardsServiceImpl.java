@@ -8,6 +8,9 @@ import com.bank.SwadeshiBank.Mapper.CardsMapper;
 import com.bank.SwadeshiBank.Repository.CardRepository;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,9 @@ import java.util.List;
 @Transactional
 public class CardsServiceImpl implements CardsService {
 
+
+	  private static final Logger log = LogManager.getLogger(CardsServiceImpl.class);
+	
     @Autowired
     CardRepository cardRepository;
 
@@ -41,12 +47,16 @@ public class CardsServiceImpl implements CardsService {
                 cardsDTO.setCvv(RandomStringGenerator.generateRandomNumeric(3).intValue());
                 cardsDTO.setRemainingCardAmount(accountsDTO.getBalanceAmount());
                 cardsDTO.setExpiryDate(LocalDateTime.now().toString());
-                cardsDTO.setCustomerId(user.getUserId());
                 cardsDTO.setAccountNumber(accountsDTO.getAccountNumber());
 
-                Card card = CardsMapper.mapToCards(cardsDTO, new Card());
+                Card card = CardsMapper.mapToCards(cardsDTO);
+                
+                card.setUserId(user.getUserId());
+                
+                log.info("Entity we are going to save is : ---> {}", card);
+                
                 card = cardRepository.save(card);
-                cardsDTO = CardsMapper.mapToCardsDTO(cardsDTO, card);
+                cardsDTO = CardsMapper.mapToCardsDTO(card);
 
             } else {
                 errorList.add("Error while creating a new Card");

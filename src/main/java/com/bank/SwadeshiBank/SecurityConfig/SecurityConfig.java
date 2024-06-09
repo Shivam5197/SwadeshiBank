@@ -16,34 +16,34 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	 http
-    	 	.csrf().disable()
-         .authorizeHttpRequests(authorize -> authorize
-             .requestMatchers("/", "/swadeshiBank/v1/", "/swadeshiBank/v1/**", "/WEB-INF/views/open/*.jsp").permitAll() // Public pages
-             .requestMatchers("/swadeshiBank/v1/account-details").authenticated() // Authenticated users
-             .requestMatchers("/swadeshiBank/v1/admin").hasRole("ADMIN") // Admin users
-             .requestMatchers("/swadeshiBank/v1/management").hasRole("MANAGER") // Manager users
-             .anyRequest().authenticated()
-         )
-            .formLogin(form -> form
-                .loginPage("/swadeshiBank/v1/loginPage")
-                .loginProcessingUrl("/swadeshiBank/v1/processLogin")
-                .defaultSuccessUrl("/swadeshiBank/v1/account-details", true)
-                .permitAll()
-         )            
-            .logout(logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/swadeshiBank/v1/logout"))
-                .logoutSuccessUrl("/swadeshiBank/v1/login?logout")
-                .invalidateHttpSession(true)
-                .permitAll()
-            );
+     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers("/", "/swadeshiBank/v1/", "/swadeshiBank/v1/**", "/WEB-INF/views/open/*.jsp").permitAll() // Public pages
+                                .requestMatchers("/swadeshiBank/v1/account-details").authenticated() // Authenticated users
+                                .requestMatchers("/swadeshiBank/v1/admin/*", "/WEB-INF/views/admin/*.jsp").hasRole("ADMIN") // Admin users
+                                .requestMatchers("/swadeshiBank/v1/management/*").hasRole("MANAGER") // Manager users
+                                .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                                .loginPage("/swadeshiBank/v1/")
+                                .loginProcessingUrl("/swadeshiBank/v1/processLogin")
+                                .defaultSuccessUrl("/swadeshiBank/v1/", true)
+                                .permitAll()
+                )
+                .logout(logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/swadeshiBank/v1/logout"))
+                                .logoutSuccessUrl("/swadeshiBank/v1/login?logout")
+                                .invalidateHttpSession(true)
+                                .permitAll()
+                );
 
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withUsername("user")
                 .password("{noop}password")
