@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap');
+
+
+/* Navbar */
+.navbar-dark.bg-darkcyan {
+    background-color: Darkcyan;
+}
+
+.nav-link{
+   font-size: x-large;
+}
+
+/* Style for anchor tags */
+a {
+    color: initial; /* Optional: Keep the initial color for anchor text */
+    text-decoration: none; /* Optional: Remove underline */
+}
+
+/* Style for anchor tags on hover */
+a:hover {
+    color: white; /* Change text color to white */
+    font-weight: bold; /* Make text bold */
+}
+
+
+.btn-login {
+    padding: 5%;
+    width: 4vw;
+    font-size: x-large;
+    size: 10rem;
+    background-color: darkcyan;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: white;
+    color: darkcyan;
+}
+
+/* Footer */
+.bg-darkcyan {
+    background-color: darkcyan;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    border: 2px solid darkcyan;
+    border-radius: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-container:hover {
+    width: 400px;
+    border-color: white;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.search-button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.search-button:focus {
+    outline: none;
+}
+
+.carousel {
+    width: 100%;
+    max-height: 70vh; /* 50% of viewport height */
+}
+
+.carousel-inner {
+    max-height: 70vh; /* 50% of viewport height */
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire slide */
+}
