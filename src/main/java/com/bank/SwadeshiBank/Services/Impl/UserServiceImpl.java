@@ -3,6 +3,7 @@ package com.bank.SwadeshiBank.Services.Impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bank.SwadeshiBank.Utils.Mails.MailService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.bank.SwadeshiBank.Repository.UsersRepository;
 import com.bank.SwadeshiBank.Services.AccountsService;
 import com.bank.SwadeshiBank.Services.CardsService;
 import com.bank.SwadeshiBank.Services.UsersService;
+import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
 
 import lombok.RequiredArgsConstructor;
@@ -42,8 +44,8 @@ public class UserServiceImpl implements UsersService {
 	@Autowired
 	UsersRepository userRepository;
 
-//	@Autowired
-//	mailService
+	@Autowired
+	MailService mailService;
 
 	@Override
 	public Boolean addNewUser(UserDTO userDto, List<String> errorList) {
@@ -59,27 +61,31 @@ public class UserServiceImpl implements UsersService {
 					& !Utils.isNull(userDto.getEmail())) {
 	
 					userEntity = UserMapper.mapToUsersEntity(userDto);
-
+					String rawPassword = RandomStringGenerator.generateRandomAlphanumericSpecial(16);
+					
 //						userEntity.setPassword(new BCryptPasswordEncoder()
 //								.encode(RandomStringGenerator.generateRandomAlphanumericSpecial(10)));
 						
 					userEntity.setPassword(new BCryptPasswordEncoder()
-							.encode(userDto.getPassword()));
+							.encode(rawPassword));
 						userEntity.setActive(Constants.UserActive.ACTIVE);
 						
-						if(userDto.getUserType().equals(Constants.UserType.ADMIN)) {
-							Authority authority = new Authority();
-							authority.setAuthority(Constants.Authority.ADMIN);
-							userEntity.addAuthority(authority);
-						}else if(userDto.getUserType().equals(Constants.UserType.MANAGER)) {
-							Authority authority = new Authority();
-							authority.setAuthority(Constants.Authority.MANAGER);
-							userEntity.addAuthority(authority);
-						}else {
-							Authority authority = new Authority();
-							authority.setAuthority(Constants.Authority.USER);
-							userEntity.addAuthority(authority);							
+						if (userDto.getUserType() == null) {
+						    // Default authority for null userType
+						    Authority authority = new Authority();
+						    authority.setAuthority(Constants.Authority.USER);
+						    userEntity.addAuthority(authority);
+						} else if (userDto.getUserType().equals(Constants.UserType.ADMIN)) {
+						    Authority authority = new Authority();
+						    authority.setAuthority(Constants.Authority.ADMIN);
+						    userEntity.addAuthority(authority);
+						} else if (userDto.getUserType().equals(Constants.UserType.MANAGER)) {
+						    Authority authority = new Authority();
+						    authority.setAuthority(Constants.Authority.MANAGER);
+						    userEntity.addAuthority(authority);
 						}
+						
+						userEntity.setCRN(RandomStringGenerator.generateRandomNumeric(6).intValue());
 						
 //						log.info("Entity we are going to save is : ---> {}", userEntity);
 						userEntity = userRepository.save(userEntity);
@@ -87,9 +93,16 @@ public class UserServiceImpl implements UsersService {
 //						log.info("Saved entity : ---> {}", userEntity);
 						AccountsDTO accountsDTO = accountService.createAccount(userEntity, userDto,errorList);
 						CardsDTO cardDTO = cardsService.createCards(userEntity, accountsDTO, errorList);
-						
+
 					// Nothing failed so setting isCreated = true;
-						isCreated =true;				
+						isCreated =true;
+
+						if(isCreated){
+							log.info(rawPassword);
+//							userEntity.setPassword(rawPassword);
+							mailService.WelcomeMail(rawPassword,userEntity, accountsDTO,cardDTO,errorList);
+						}
+
 			} else {
 				errorList.add("Please provide required details!");
 			}
@@ -112,6 +125,8 @@ public class UserServiceImpl implements UsersService {
 
 			userDto = UserMapper.mapToUsersDTO(user);
 
+			log.info("User Fetched is :"+ userDto.toString());
+			
 		} catch (Exception e) {
 			errorList.add("Customer with given number " + mobileNumber + " Does not exists!");
 			e.printStackTrace();

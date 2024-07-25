@@ -1,18 +1,29 @@
 package com.bank.SwadeshiBank.Mapper;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.bank.SwadeshiBank.DTO.UserDTO;
 import com.bank.SwadeshiBank.Entity.Users;
 
 public class UserMapper {
 
-    private static final Logger log = LogManager.getLogger(UserMapper.class);
+//    private static final Logger log = LogManager.getLogger(UserMapper.class);
 
  
 
     public static Users mapToUsersEntity(UserDTO userDTO){
+    	
+    	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dob = null;
+        try {
+            dob = sdf.parse(userDTO.getDateOfBirth());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     	
     	Users user = new Users();
     	
@@ -21,7 +32,7 @@ public class UserMapper {
     	user.setPassword(userDTO.getPassword());
     	user.setFatherName(userDTO.getFatherName());
     	user.setMotherName(userDTO.getMotherName());
-    	user.setDateOfBirth(userDTO.getDateOfBirth());
+    	user.setDateOfBirth(dob);
     	user.setGender(userDTO.getGender());
     	user.setMaritalStatus(userDTO.getMaritalStatus());
     	user.setCategory(userDTO.getCategory());
@@ -57,7 +68,7 @@ public class UserMapper {
     	userDTO.setPassword(user.getPassword());
     	userDTO.setFatherName(user.getFatherName());
     	userDTO.setMotherName(user.getMotherName());
-    	userDTO.setDateOfBirth(user.getDateOfBirth());
+    	userDTO.setDateOfBirth(user.getDateOfBirth().toString());
     	userDTO.setGender(user.getGender());
     	userDTO.setMaritalStatus(user.getMaritalStatus());
     	userDTO.setCategory(user.getCategory());

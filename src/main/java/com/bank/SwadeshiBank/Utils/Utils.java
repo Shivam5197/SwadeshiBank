@@ -1,6 +1,9 @@
 package com.bank.SwadeshiBank.Utils;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.bank.SwadeshiBank.DTO.APIResponseDTO;
 
@@ -43,4 +46,16 @@ public class Utils {
     public static boolean isNull(Double number) {
         return number == null;
     }
+    
+    public static String getCurrentUsername() {
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();
+        }
+    	
+    	return null;
+    }
+    
 }

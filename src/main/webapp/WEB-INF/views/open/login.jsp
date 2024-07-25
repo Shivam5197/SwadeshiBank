@@ -108,7 +108,7 @@
             </div>
             <div class="forgot-password text-center" style="color:white">
             Don't have a account yet? 
-                <a href="forgotPassword.jsp" style="color:blue"> Come grow with us</a>
+                <a href="/swadeshiBank/v1/open-account" style="color:blue"> Come grow with us</a>
             </div>
         </form>
     </div>

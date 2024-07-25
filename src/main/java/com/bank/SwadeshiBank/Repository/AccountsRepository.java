@@ -7,4 +7,6 @@ import com.bank.SwadeshiBank.Entity.Accounts;
 public interface AccountsRepository extends JpaRepository<Accounts,Long> {
 
 
+
+
 }

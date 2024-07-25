@@ -9,6 +9,6 @@ import com.bank.SwadeshiBank.Entity.Users;
 public interface CardsService {
 
 	public CardsDTO createCards(Users user, AccountsDTO accountsDTO, List<String> errorList);
-	
-	
+
+	public CardsDTO getCardByUser(Users user , List<String> errorList);
 }

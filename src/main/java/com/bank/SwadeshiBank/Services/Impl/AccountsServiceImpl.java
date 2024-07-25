@@ -17,6 +17,7 @@ import com.bank.SwadeshiBank.Entity.Users;
 import com.bank.SwadeshiBank.Mapper.AccountsMapper;
 import com.bank.SwadeshiBank.Repository.AccountsRepository;
 import com.bank.SwadeshiBank.Services.AccountsService;
+import com.bank.SwadeshiBank.Utils.AddressGenerator;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
 
@@ -46,18 +47,15 @@ public class AccountsServiceImpl implements AccountsService {
 				
 				// Create a new account with default values
 				accountDTO.setAccountNumber(RandomStringGenerator.generateRandomNumeric(12));
-				accountDTO.setBranchPincode(userDto.getBranchPincode());
-				accountDTO.setBranchState(userDto.getBranchState());
-				accountDTO.setBranchCity(userDto.getBranchCity());
+				accountDTO.setBranchPincode(AddressGenerator.generatePincode());
+				accountDTO.setBranchState(AddressGenerator.generateState());
+				accountDTO.setBranchCity(AddressGenerator.generateCity());
 				accountDTO.setAccountType(userDto.getAccountType());
-				accountDTO.setBranchAddress(userDto.getBranchAddress());
+				accountDTO.setBranchAddress(AddressGenerator.generateAddress());
 				accountDTO.setIfscCode(RandomStringGenerator.generateRandomAlphanumeric(7).toUpperCase());
 				accountDTO.setBalanceAmount(userDto.getInitialFunds());
 				accountDTO.setInitialFunds(userDto.getInitialFunds());
-				accountDTO.setNetBanking(true);
-
-			
-				
+				accountDTO.setNetBanking(userDto.getNetBanking());
 
 				Accounts newCreatedAccount = AccountsMapper.mapToAccounts(accountDTO);
 

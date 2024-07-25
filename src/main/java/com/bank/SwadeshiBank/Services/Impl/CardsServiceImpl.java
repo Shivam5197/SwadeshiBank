@@ -2,6 +2,7 @@ package com.bank.SwadeshiBank.Services.Impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,6 +65,17 @@ public class CardsServiceImpl implements CardsService {
             e.printStackTrace();
             errorList.add("Something went wrong !");
         }
+        return cardsDTO;
+    }
+
+    @Override
+    public CardsDTO getCardByUser(Users user , List<String> errorList){
+        CardsDTO cardsDTO = new CardsDTO();
+
+        Card card =   cardRepository.findByUserId(user.getUserId()).orElseThrow(()-> new NoSuchElementException("Card for this user not found"));
+
+     cardsDTO =   CardsMapper.mapToCardsDTO(card);
+        log.info(cardsDTO);
         return cardsDTO;
     }
 

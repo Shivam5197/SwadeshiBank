@@ -3,6 +3,8 @@ package com.bank.SwadeshiBank.DTO;
 
 import com.bank.SwadeshiBank.Entity.Users;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +29,15 @@ public class AccountsDTO {
     private Boolean netBanking;
     private Long initialFunds;
 
-    
-    
-    @Override
-	public String toString() {
-		return "{\"accountNumber\":\"" + accountNumber + "\", \"ifscCode\":\"" + ifscCode + "\", \"user\":\"" + user
-				+ "\", \"accountType\":\"" + accountType + "\", \"branchAddress\":\"" + branchAddress
-				+ "\", \"branchState\":\"" + branchState + "\", \"branchCity\":\"" + branchCity
-				+ "\", \"branchPincode\":\"" + branchPincode + "\", \"balanceAmount\":\"" + balanceAmount
-				+ "\", \"netBanking\":\"" + netBanking + "\", \"initialFunds\":\"" + initialFunds + "\"}";
-	}
 
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try{
+            return objectMapper.writeValueAsString(this);
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+            return super.toString();
+        }
+    }
 }

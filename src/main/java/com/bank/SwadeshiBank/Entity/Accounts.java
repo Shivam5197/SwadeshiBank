@@ -1,5 +1,7 @@
 package com.bank.SwadeshiBank.Entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,9 +31,9 @@ public class Accounts extends BaseEntity{
     @JoinColumn(name = "user_id")
     private Users user;
 
-    
+
     private String ifscCode;
-    
+
     private String accountType;
     private String branchAddress;
     private String branchState;
@@ -40,23 +42,19 @@ public class Accounts extends BaseEntity{
     private Long balanceAmount;
     private Boolean netBanking;
     private Long initialFunds;
-    
-    
-    
-    
-//    @Override
-//    public String toString() {
-//        return "{\"accountNumber\":\"" + accountNumber 
-//                + "\", \"ifscCode\":\"" + ifscCode 
-//                + "\", \"accountType\":\"" + accountType 
-//                + "\", \"branchAddress\":\"" + branchAddress 
-//                + "\", \"branchState\":\"" + branchState 
-//                + "\", \"branchCity\":\"" + branchCity 
-//                + "\", \"branchPincode\":\"" + branchPincode 
-//                + "\", \"balanceAmount\":\"" + balanceAmount
-//                + "\", \"user\":\"" + user
-//                + "\", \"netBanking\":\"" + netBanking 
-//                + "\", \"initialFunds\":\"" + initialFunds + "\"}";
-//    }
-//    
+
+
+
+
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return  objectMapper.writeValueAsString(this);
+        }catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return super.toString();
+        }
+    }
+
 }
