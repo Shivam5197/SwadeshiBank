@@ -3,7 +3,6 @@ package com.bank.SwadeshiBank.Services.Impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bank.SwadeshiBank.Utils.Mails.MailService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,11 @@ import com.bank.SwadeshiBank.Constants.Constants;
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
 import com.bank.SwadeshiBank.DTO.CardsDTO;
 import com.bank.SwadeshiBank.DTO.UserDTO;
+import com.bank.SwadeshiBank.Entity.Accounts;
 import com.bank.SwadeshiBank.Entity.Authority;
 import com.bank.SwadeshiBank.Entity.Users;
+import com.bank.SwadeshiBank.Exceptions.AccountNotFoundException;
+import com.bank.SwadeshiBank.Mapper.AccountsMapper;
 import com.bank.SwadeshiBank.Mapper.UserMapper;
 import com.bank.SwadeshiBank.Repository.UsersRepository;
 import com.bank.SwadeshiBank.Services.AccountsService;
@@ -25,6 +27,7 @@ import com.bank.SwadeshiBank.Services.CardsService;
 import com.bank.SwadeshiBank.Services.UsersService;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
+import com.bank.SwadeshiBank.Utils.Mails.MailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +49,10 @@ public class UserServiceImpl implements UsersService {
 
 	@Autowired
 	MailService mailService;
+
+//	@Autowired
+//	UPIService upiService;
+
 
 	@Override
 	public Boolean addNewUser(UserDTO userDto, List<String> errorList) {
@@ -93,6 +100,7 @@ public class UserServiceImpl implements UsersService {
 //						log.info("Saved entity : ---> {}", userEntity);
 						AccountsDTO accountsDTO = accountService.createAccount(userEntity, userDto,errorList);
 						CardsDTO cardDTO = cardsService.createCards(userEntity, accountsDTO, errorList);
+
 
 					// Nothing failed so setting isCreated = true;
 						isCreated =true;
@@ -241,36 +249,38 @@ public class UserServiceImpl implements UsersService {
 	}
 
 	@Override
-	public UserDTO getUserAccountDetails(String userName, List<String> errorList) {
+	public List<AccountsDTO> getUserAccountDetails(String userName, List<String> errorList) {
 		UserDTO userDto = new UserDTO();
 		Users user = new Users();
+		List<AccountsDTO> accountsDTO = new ArrayList<AccountsDTO>();
+
 		try {
 
 			if(!userName.isEmpty()) {
-				
+
 				user = userRepository.findByUserName(userName).orElseThrow(()->(new UsernameNotFoundException("User with :" + userName +" Not found")));
-				
+
 				log.info("User Accounts Details : {}" , user);
-				
+
 				log.info("User getAuthorities Details : {}" , user.getAuthorities());
 				log.info("User getAccountsSet Details : {}" , user.getAccountsSet());
 				log.info("User getCardSet Details : {}" , user.getCardSet());
 				log.info("User getLoansSet Details : {}" , user.getLoansSet());
 				log.info("User getTransactionsSet Details : {}" , user.getTransactionsSet());
 
-				
-				user.getAccountsSet();
-				
-				log.info("User Accounts Details : {}" , userDto.getAccountsSet());
-				
+				List<Accounts> accounts = 	user.getAccountsSet();
+				for(Accounts account : accounts){
+					accountsDTO.add(AccountsMapper.mapToAccountsDTO(account));
+				}
+
 			}else {
 				errorList.add("Please provide the User Name, Phone Number or Email to find the Customer Details !");
 			}
-			
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new AccountNotFoundException("No account found for this user");
 		}
-		return userDto;
+		return accountsDTO;
 	}
 
 	@Override
@@ -279,6 +289,60 @@ public class UserServiceImpl implements UsersService {
 		return null;
 	}
 
-	
-	
+	/**
+	 * @param errorList
+	 * @return
+	 */
+	@Override
+	public List<UserDTO> getAllActiveUsers(List<String> errorList) {
+		List<UserDTO> userDTOS = new ArrayList<>();
+
+		try {
+
+		List<Users>	 users	= userRepository.findAll();
+
+		for(Users users1 : users){
+		userDTOS.add(	UserMapper.mapToUsersDTO(users1));
+		}
+
+		log.info("All users are here  :::::::::::: " +userDTOS.toString());
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+		}
+		return userDTOS;
+	}
+
+
+
+	@Override
+	public List<Accounts> getUserAccounts(String userName, List<String> errorList){
+		UserDTO userDto = new UserDTO();
+		Users user = new Users();
+
+		List<Accounts> accounts= new ArrayList<>();
+
+		try {
+
+			if(!userName.isEmpty()) {
+
+				user = userRepository.findByUserName(userName).orElseThrow(()->(new UsernameNotFoundException("User with :" + userName +" Not found")));
+
+		//		log.info("User getAccountsSet Details : {}" , user.getAccountsSet());
+
+				 accounts = user.getAccountsSet();
+
+			}else {
+				errorList.add("Please provide the User Name, Phone Number or Email to find the Customer Details !");
+			}
+
+		} catch (Exception e) {
+			throw new AccountNotFoundException("No account found for this user");
+		}
+
+return accounts;
+	}
+
+
 }

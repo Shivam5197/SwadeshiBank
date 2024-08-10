@@ -3,33 +3,27 @@ package com.bank.SwadeshiBank.Utils.Mails;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
 import com.bank.SwadeshiBank.DTO.CardsDTO;
-import com.bank.SwadeshiBank.Entity.Card;
-import jakarta.mail.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Repository;
-
-import com.bank.SwadeshiBank.Entity.Accounts;
 import com.bank.SwadeshiBank.Entity.Users;
 
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
-
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor

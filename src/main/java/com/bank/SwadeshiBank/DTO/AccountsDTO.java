@@ -2,9 +2,10 @@ package com.bank.SwadeshiBank.DTO;
 
 
 import com.bank.SwadeshiBank.Entity.Users;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,14 +31,28 @@ public class AccountsDTO {
     private Long initialFunds;
 
 
+//    @Override
+//    public String toString() {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try{
+//            return objectMapper.writeValueAsString(this);
+//        }catch (JsonProcessingException e){
+//            e.printStackTrace();
+//            return super.toString();
+//        }
+//    }
+
     @Override
     public String toString() {
         ObjectMapper objectMapper = new ObjectMapper();
-        try{
+        objectMapper.registerModule(new JavaTimeModule());
+        try {
             return objectMapper.writeValueAsString(this);
-        }catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
             return super.toString();
         }
     }
+
 }
+

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bank.SwadeshiBank.Services.UsersService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import com.bank.SwadeshiBank.Mapper.NewAccountsMapper;
 import com.bank.SwadeshiBank.Repository.NewAccountsDraftRepository;
 import com.bank.SwadeshiBank.Repository.UsersRepository;
 import com.bank.SwadeshiBank.Services.ManagerServices;
+import com.bank.SwadeshiBank.Services.UsersService;
 import com.bank.SwadeshiBank.Utils.Utils;
 
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class ManagerServicesImpl implements ManagerServices {
     }
 
     /**
-     * @param user
+     * @param userDto
      * @return
      */
     @Override

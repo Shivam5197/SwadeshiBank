@@ -11,5 +11,7 @@ public interface AccountsService {
 	public AccountsDTO createAccount(Users users, UserDTO userDto ,List<String> errorList);
 	
 	public List<AccountsDTO> listOfAccounts(List<String> errorList);
-	
+
+	public AccountsDTO getAccountByAccountNumber(Long accountNumber,List<String> errorList);
+
 }

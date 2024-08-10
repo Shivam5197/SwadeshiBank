@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class Users extends BaseEntity{
     private String fullname;
     private String fatherName;
     private String motherName;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfBirth;
     private String gender;
     private String maritalStatus;
@@ -85,22 +88,30 @@ public class Users extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Savings> savings;
-    
+
+    @OneToOne(mappedBy = "user"  , fetch = FetchType.LAZY)
+    private UPI_Entity upiEntity;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private NetBankingEntity netBankingEntity;
+
     // Add helper methods to add authority
     public void addAuthority(Authority authority) {
         authorities.add(authority);
         authority.setUser(this);
     }
     
+
     @Override
     public String toString() {
-
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         try {
-            return  objectMapper.writeValueAsString(this);
-        }catch (JsonProcessingException e) {
-        e.printStackTrace();
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return super.toString();
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package com.bank.SwadeshiBank.Entity;
 
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +27,12 @@ public class Transactions extends BaseEntity{
     private Long transactionId;
 
     private Long accountNumber;
-    private Long amountCredited;
-    private Long amountDebited;
-
+    private String debitedOrCredited;
+    private Long amount;
+    private LocalDateTime transactionTime;
+    private String bankName;
+    private String ifscCode;
+    private String transactionType;
 
 
 }
