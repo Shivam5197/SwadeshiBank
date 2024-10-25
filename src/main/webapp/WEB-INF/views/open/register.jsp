@@ -278,7 +278,7 @@
                               </select>
                            </div>
                      <div class="form-group">
-                        <label for="maritalStatus">Net Banking?</label> 
+                        <label for="Net Banking">Net Banking?</label> 
                         <select
                            class="form-control" id="netBanking">
                            <option value="Yes">Yes</option>
@@ -286,12 +286,7 @@
                         </select>
                      </div>
                            <div class="form-group">
-                              <label for="deliveryAddress">Account Opening amount</label> <input
-                                 type="range" class="form-control-range" min="1000"
-                                 max="100000" step="100" id="rangeInputOpeningAmount">
-                              <div class="range-label">
-                                 Value: <span id="rangeValue">1000</span>
-                              </div>
+                              <label for="deliveryAddress">Account Opening amount</label> 
                               <input type="number" class="input-number form-control"
                                  min="1000" max="100000" step="100" id="openingAmout"
                                  value="1000">

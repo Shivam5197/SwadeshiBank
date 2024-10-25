@@ -4,11 +4,10 @@ import java.util.List;
 
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
 import com.bank.SwadeshiBank.DTO.UserDTO;
-import com.bank.SwadeshiBank.Entity.Users;
 
 public interface AccountsService {
 
-	public AccountsDTO createAccount(Users users, UserDTO userDto ,List<String> errorList);
+	public AccountsDTO createAccount(UserDTO userDto ,List<String> errorList);
 	
 	public List<AccountsDTO> listOfAccounts(List<String> errorList);
 

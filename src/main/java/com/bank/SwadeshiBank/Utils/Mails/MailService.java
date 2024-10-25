@@ -5,15 +5,14 @@ import java.util.List;
 import com.bank.SwadeshiBank.DTO.AccountsDTO;
 import com.bank.SwadeshiBank.DTO.CardsDTO;
 import com.bank.SwadeshiBank.Entity.Users;
+import com.bank.SwadeshiBank.Utils.Documents.PDFGeneratorService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public interface MailService {
 
 	  public void WelcomeMail(String rawPassword,Users registeredUser, AccountsDTO openedAccount, CardsDTO AssignedCard , List<String> errorList);
 
-	  
-		/*
-		 * public void SendMail(String from , String mailTo, String subject, String
-		 * message);
-		 */
+	  public void WelcomeEmailWithAttachment(Users registeredUser, AccountsDTO openedAccount, CardsDTO AssignedCard , List<String> errorList, byte[] attachmentData, String attachmentName);
+
 
 }

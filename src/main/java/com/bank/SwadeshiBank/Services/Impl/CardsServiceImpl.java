@@ -46,7 +46,7 @@ public class CardsServiceImpl implements CardsService {
                 cardsDTO.setTotalCardAmount(accountsDTO.getBalanceAmount());
                 cardsDTO.setCvv(RandomStringGenerator.generateRandomNumeric(3).intValue());
                 cardsDTO.setRemainingCardAmount(accountsDTO.getBalanceAmount());
-                cardsDTO.setExpiryDate(LocalDateTime.now().toString());
+                cardsDTO.setExpiryDate(RandomStringGenerator.generateRandomExpiryDate());
                 cardsDTO.setAccountNumber(accountsDTO.getAccountNumber());
 
                 Card card = CardsMapper.mapToCards(cardsDTO);

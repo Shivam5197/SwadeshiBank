@@ -1,6 +1,8 @@
 package com.bank.SwadeshiBank.DTO;
 
 
+import com.bank.SwadeshiBank.Entity.NetBankingEntity;
+import com.bank.SwadeshiBank.Entity.UPI_Entity;
 import com.bank.SwadeshiBank.Entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,8 @@ public class AccountsDTO {
     private Boolean netBanking;
     private Long initialFunds;
 
+    private UPI_Entity upiEntity;
+    private NetBankingEntity netBankingEntity;
 
 //    @Override
 //    public String toString() {

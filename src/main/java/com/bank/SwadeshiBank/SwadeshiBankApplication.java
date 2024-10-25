@@ -13,5 +13,4 @@ public class SwadeshiBankApplication {
 		SpringApplication.run(SwadeshiBankApplication.class, args);
 	}
 
-	
 }

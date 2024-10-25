@@ -39,7 +39,8 @@ public class NewAccountsMapper {
     	newAccountUser.setNominieAadharNumber(userDTO.getNominieAadharNumber());
     	newAccountUser.setNominiePanNumber(userDTO.getNominiePanNumber());
     	newAccountUser.setNominieMobileNumber(userDTO.getNominieMobileNumber());
-    	
+    	newAccountUser.setUPIorNetBanking(userDTO.getUPIorNetBanking());
+    	newAccountUser.setAccountType(userDTO.getAccountType());
     	return newAccountUser;
     }
     
@@ -73,8 +74,8 @@ public class NewAccountsMapper {
     	accountsDraftDTO.setNominieAadharNumber(user.getNominieAadharNumber());
     	accountsDraftDTO.setNominiePanNumber(user.getNominiePanNumber());
     	accountsDraftDTO.setNominieMobileNumber(user.getNominieMobileNumber());
-
-    	
+    	accountsDraftDTO.setUPIorNetBanking(user.getUPIorNetBanking());
+    	accountsDraftDTO.setAccountType(user.getAccountType());
     	return accountsDraftDTO;
     }
 
@@ -109,8 +110,8 @@ public class NewAccountsMapper {
 		accountsDraftDTO.setNominieAadharNumber(user.getNominieAadharNumber());
 		accountsDraftDTO.setNominiePanNumber(user.getNominiePanNumber());
 		accountsDraftDTO.setNominieMobileNumber(user.getNominieMobileNumber());
-
-
+		accountsDraftDTO.setUPIorNetBanking(user.getUPIorNetBanking());
+		accountsDraftDTO.setAccountType(user.getAccountType());
 		return accountsDraftDTO;
 	}
 
@@ -143,6 +144,7 @@ public class NewAccountsMapper {
 		user.setNominieAadharNumber(accountsDraftDTO.getNominieAadharNumber());
 		user.setNominiePanNumber(accountsDraftDTO.getNominiePanNumber());
 		user.setNominieMobileNumber(accountsDraftDTO.getNominieMobileNumber());
+		user.setAccountType(accountsDraftDTO.getAccountType());
 		return user;
 	}
 

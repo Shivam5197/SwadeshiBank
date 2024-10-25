@@ -11,6 +11,6 @@ public interface UPIRepository extends JpaRepository<UPI_Entity,Long > {
 
 
     Optional<UPI_Entity> findByUser(Users users);
-
+    Optional<UPI_Entity> findByUpiId(String upiId);
 
 }

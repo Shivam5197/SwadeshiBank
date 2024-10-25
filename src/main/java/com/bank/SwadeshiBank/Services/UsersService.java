@@ -24,5 +24,9 @@ public interface UsersService {
 
 	public List<Accounts> getUserAccounts(String userName , List<String> errorList);
 
+	public UserDTO getUserDetails(String userName,List<String> errorList);
+
 //	public UPI_Entity getUserUpiData(String username, List<String> errorList);
+
+	public boolean deleteUserByUsername(String userName);
 }

@@ -1,5 +1,12 @@
 package com.bank.SwadeshiBank.Utils;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,5 +64,45 @@ public class Utils {
     	
     	return null;
     }
-    
+
+    public static String convertToDateMonthYear(String timestamp) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MMMM-yyyy");
+            Date date = inputFormat.parse(timestamp);
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static String convertToDateMonthYearWithTime(String timestamp) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MMMM-yyyy 'at' HH:mm:ss");
+            Date date = inputFormat.parse(timestamp);
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String formatDateToDDMMYYYY(String dateString) {
+        // Define the input format for LocalDate (only date component)
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            // Parse the date string to a LocalDate object
+            LocalDate date = LocalDate.parse(dateString, inputFormatter);
+
+            // Define the output format
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+
+            // Format the date to the desired output format
+            return date.format(outputFormatter);
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Invalid date format: " + dateString, e);
+        }
+    }
 }

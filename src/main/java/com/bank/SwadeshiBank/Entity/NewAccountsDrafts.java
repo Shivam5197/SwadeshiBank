@@ -54,7 +54,7 @@ public class NewAccountsDrafts {
     private String occupation;
     private String organisation;
     private Long annualIncome;
-
+    private String accountType;
     private Long initialFunds;
     private String nominieFullName;
     private String nominieRelation;
@@ -64,6 +64,7 @@ public class NewAccountsDrafts {
     private String nominiePanNumber;
     @Column(unique = true)
     private String nominieMobileNumber;
+    private Boolean UPIorNetBanking;
 
     
     @Override

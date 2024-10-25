@@ -19,7 +19,7 @@ function getFormData() {
     let annualIncome = document.getElementById('rangeInput').value;
     let accountType = document.getElementById('accountType').value;
     let netBanking = document.getElementById('netBanking').value;
-    let initialFunds = document.getElementById('rangeInputOpeningAmount').value;
+    let initialFunds = document.getElementById('openingAmout').value;
     let nomineeFullName = document.getElementById('Nominee_fullname').value;
     let nomineeRelation = document.getElementById('Nominee_relation').value;
     let nomineeAadhaar = document.getElementById('NomineeAadhar').value;
@@ -29,6 +29,8 @@ function getFormData() {
     let city = document.getElementById('city').value;
     let state = document.getElementById('State').value;
     let pinCode = document.getElementById('PinCode').value;
+
+	console.log("Value of initialFunds is : " + initialFunds)
 
     // Append values to formData
     formData.append("userName", userName);
@@ -55,7 +57,7 @@ function getFormData() {
     formData.append("nominieRelation", nomineeRelation);
     formData.append("nominiePanNumber", nomineePan);
     formData.append("nominieMobileNumber", nomineeMobileNumber);
-    formData.append("netBanking", netBanking);
+    formData.append("UPIorNetBanking", netBanking);
     formData.append("initialFunds", initialFunds);
     formData.append("accountType", accountType);
 

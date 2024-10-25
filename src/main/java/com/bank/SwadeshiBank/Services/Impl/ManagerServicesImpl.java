@@ -64,10 +64,7 @@ public class ManagerServicesImpl implements ManagerServices {
                 & !Utils.isNull(userDto.getPanNumber())
                 & !Utils.isNull(userDto.getUserName())
                 & !Utils.isNull(userDto.getEmail())) {
-
-         NewAccountsDraftDTO newAccountsDraftDTO =  NewAccountsMapper.mapUserDtoToNewAccountsDraftDTO(userDto);
-
-//            NewAccountsMapper.mapToNewAccountsDraftsEntity(newAccountsDraftDTO);
+        	NewAccountsDraftDTO newAccountsDraftDTO =  NewAccountsMapper.mapUserDtoToNewAccountsDraftDTO(userDto);
 
            NewAccountsDrafts newAccountsDrafts = newAccountsDraftRepository.save(NewAccountsMapper.mapToNewAccountsDraftsEntity(newAccountsDraftDTO));
             AddedToVerificationList = true;
@@ -86,6 +83,7 @@ public class ManagerServicesImpl implements ManagerServices {
     @Override
     public List<NewAccountsDraftDTO> getListOfPendingAccounts(List<String> errorList) {
         String username = Utils.getCurrentUsername();
+
         List<NewAccountsDraftDTO> newAccountsDraftDTO = new ArrayList<>();
 
         try {
@@ -139,8 +137,10 @@ public class ManagerServicesImpl implements ManagerServices {
           NewAccountsDraftDTO newAccountsDraftDTO = NewAccountsMapper.mapToNewAccountsDraftsDTO(newAccountsDrafts);
 
           userDTO = NewAccountsMapper.mapToUsersDTO(newAccountsDraftDTO);
+          userDTO.setUPIorNetBanking(newAccountsDraftDTO.getUPIorNetBanking());
+          log.info("NewAccountsDrafts :   :: :: : ::"+userDTO);
 
-            isSaved = usersService.addNewUser(userDTO,errorList);
+          isSaved = usersService.addNewUser(userDTO,errorList);
 
             if(isSaved) {
                 

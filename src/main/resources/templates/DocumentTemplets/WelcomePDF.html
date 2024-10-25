@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Swadeshi Bank</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.header img {
+    width: 150px;
+}
+
+.welcome-message {
+    font-size: 20px;
+    color: #333333;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.details-section {
+    margin-bottom: 20px;
+}
+
+.details-section h2 {
+    color: darkcyan;
+    border-bottom: 2px solid darkcyan;
+    padding-bottom: 10px;
+}
+
+.details-section .key-value {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.details-section .key {
+    font-weight: bold;
+    color: #333333;
+}
+
+.details-section .value {
+    color: #555555;
+}
+
+.password-warning {
+    color: red;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+    color: #777777;
+    border-top: 1px solid #dddddd;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+.confidential {
+    color: #ff0000;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="src/main/resources/static/Images/home/logo.PNG" alt="Swadeshi Bank Logo">
+    </div>
+
+    <div class="welcome-message">
+        <h1>Welcome to Swadeshi Bank!</h1>
+        <p>Below are your Account related Details! </p>
+    </div>
+
+    <div class="details-section">
+        <h2>Account Details</h2>
+        <div class="key-value">
+            <span class="key">Account Number: </span>
+            <span class="value"> {{accountNumber}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">Customer Relation Number (CRN): </span>
+            <span class="value"> {{crn}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">IFSC Code: </span>
+            <span class="value"> {{ifscCode}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">Opening Balance: </span>
+            <span class="value"> {{openingamount}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">Account Password: </span>
+            <span class="value"> {{password}}</span>
+        </div>
+        <p class="password-warning">We strongly recommend that you change your password as soon as possible!</p>
+
+        <div class="key-value">
+            <span class="key">Branch Address: </span>
+            <span class="value"> {{branchFullAddress}}</span>
+        </div>
+    </div>
+
+    <div class="details-section">
+        <h2>Your Debit Card Details</h2>
+        <div class="key-value">
+            <span class="key">Card Number: </span>
+            <span class="value"> {{cardNumber}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">Expiry Date: </span>
+            <span class="value"> {{expiryDate}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">CVV: </span>
+            <span class="value"> {{cvv}}</span>
+        </div>
+    </div>
+
+    <div class="details-section">
+        <h2>Your Net Banking Details</h2>
+        <div class="key-value">
+            <span class="key">User ID: </span>
+            <span class="value"> {{userID}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">Password: </span>
+            <span class="value"> {{netBankingPassword}}</span>
+        </div>
+        <p class="password-warning">We strongly recommend that you change your password as soon as possible!</p>
+    </div>
+
+    <div class="details-section">
+        <h2>Your UPI Details</h2>
+        <div class="key-value">
+            <span class="key">UPI ID: </span>
+            <span class="value"> {{upiID}}</span>
+        </div>
+        <div class="key-value">
+            <span class="key">UPI PIN: </span>
+            <span class="value"> {{upiPin}}</span>
+        </div>
+        <p class="password-warning">We strongly recommend that you change your UPI PIN as soon as possible!</p>
+    </div>
+
+    <div class="footer">
+        <p class="confidential">This document is confidential. Please do not share your banking information with anyone.</p>
+        <p>&copy; 2024 Swadeshi Bank. All rights reserved.</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -3,10 +3,14 @@ package com.bank.SwadeshiBank.Services.Impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bank.SwadeshiBank.Entity.NetBankingEntity;
+import com.bank.SwadeshiBank.Entity.UPI_Entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +21,10 @@ import com.bank.SwadeshiBank.Entity.Users;
 import com.bank.SwadeshiBank.Exceptions.AccountNotFoundException;
 import com.bank.SwadeshiBank.Mapper.AccountsMapper;
 import com.bank.SwadeshiBank.Repository.AccountsRepository;
+import com.bank.SwadeshiBank.Repository.UsersRepository;
 import com.bank.SwadeshiBank.Services.AccountsService;
+import com.bank.SwadeshiBank.Services.NetBankingService;
+import com.bank.SwadeshiBank.Services.UPIService;
 import com.bank.SwadeshiBank.Utils.AddressGenerator;
 import com.bank.SwadeshiBank.Utils.RandomStringGenerator;
 import com.bank.SwadeshiBank.Utils.Utils;
@@ -34,19 +41,34 @@ public class AccountsServiceImpl implements AccountsService {
 	@Autowired
 	AccountsRepository accountsRepository;
 
+	@Autowired
+	UsersRepository usersRepository;
+
+	@Lazy
+	@Autowired
+	UPIService upiService;
+	
+	@Lazy
+	@Autowired
+	NetBankingService netBankingService;
+	
 	@Override
-	public AccountsDTO createAccount(Users users, UserDTO userDto ,List<String> errorList) {
+	public AccountsDTO createAccount(UserDTO userDto ,List<String> errorList) {
 
 		log.info("Hi, Welcome to the Create Account Method !!  The values you came with are : {} ",
-				users + " And for error List we have : {}", errorList);
+				userDto.getUserId() + " And for error List we have : {}", userDto.getInitialFunds()+"Account Type : " + userDto.getAccountType());
 
 		AccountsDTO accountDTO = new AccountsDTO();
+		UPI_Entity createdUPI = new UPI_Entity();
+		NetBankingEntity netBankingEntity = new NetBankingEntity();
+
+		Users users = usersRepository.findByUserName(userDto.getUserName()).orElseThrow(()-> new UsernameNotFoundException("User with this username is not found"));
 
 		try {
 			log.info("Values of : Utils.isNull(users.getUserId()) && users.isActive()  {} " , users.getUserId() +" : " +  users.isActive());
 			if ((!Utils.isNull(users.getUserId()) || !Utils.isNull(users.getUserName())) && users.isActive()) {
 				log.info("If condition passed in Create Account method !!");
-				
+
 				// Create a new account with default values
 				accountDTO.setAccountNumber(RandomStringGenerator.generateRandomNumeric(12));
 				accountDTO.setBranchPincode(AddressGenerator.generatePincode());
@@ -60,25 +82,33 @@ public class AccountsServiceImpl implements AccountsService {
 				accountDTO.setNetBanking(userDto.getUPIorNetBanking());
 
 				Accounts newCreatedAccount = AccountsMapper.mapToAccounts(accountDTO);
-
 				newCreatedAccount.setUser(users);
-				
 				log.info("New Created account details to be saved are : {}", newCreatedAccount);
-				
-				
 				accountsRepository.save(newCreatedAccount);
+			//	accountDTO.setNetBanking(true); this is for testing purpose for already created accounts
+				log.info("Get Net Banking Status: " + accountDTO.getNetBanking());
+				if(accountDTO.getNetBanking()){
+				createdUPI = upiService.generateUPIId(null, userDto.getUserName() , accountDTO.getAccountNumber(),errorList );
+				netBankingEntity = netBankingService.generateNetBanking(userDto.getUserName() , accountDTO.getAccountNumber(),errorList);
 
+				}
 				accountDTO = AccountsMapper.mapToAccountsDTO(newCreatedAccount);
+				accountDTO.setUpiEntity(createdUPI);
+				accountDTO.setNetBankingEntity(netBankingEntity);
+
+				log.info("===========================================================================================");
+				log.info("::::::::::::::::::::::::::::::::"+accountDTO.toString());
+				log.info("===========================================================================================");
 
 			}else {
-				errorList.add("Cannot find the user for "+users.getFullname()+ " with username : " +users.getUserName()+" Please try again later or raise a ticket for this issue");
+				errorList.add("Cannot find the user for "+users.getFullname()+ " with username : " +users.getUserName()+" " +
+						"Please try again later or raise a ticket for this issue");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			errorList.add("Something went wrong while adding account for "+users.getFullname()+ "Please try again later or raise a ticket for this issue");
 		}
-
 		return accountDTO;
 	}
 

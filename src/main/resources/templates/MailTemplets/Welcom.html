@@ -1,79 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome to Swadeshi Bank</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 0;
-        color: #333;
-    }
-    .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .header {
-        text-align: center;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #ddd;
-    }
-    .header h1 {
-        margin: 0;
-        color: darkcyan;
-    }
-    .content {
-        padding: 20px 0;
-    }
-    .content h2 {
-        color: darkcyan;
-    }
-    .content p {
-        margin: 10px 0;
-    }
-    .footer {
-        text-align: center;
-        padding-top: 20px;
-        border-top: 1px solid #ddd;
-    }
-    .footer p {
-        margin: 0;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Swadeshi Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .header img {
+            width: 150px;
+        }
+
+        .content {
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .content h1 {
+            color: darkcyan;
+        }
+
+        .content p {
+            margin: 10px 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #dddddd;
+            text-align: left;
+            color: #777777;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Welcome to Swadeshi Bank!</h1>
-        </div>
-        <div class="content">
-            <p>Dear <strong>${fullname}</strong>,</p>
-            <p>We are delighted to have you as a valued customer. Below are your account and Debit card details:</p>
 
-            <h2>Account Details</h2>
-            <p><strong>User Name:</strong>  ${userName} </p>
-            <p><strong>Account Password:</strong> ${password} <p style="color:red;">{We strongly recommend to change your password as soon as possible!}</p> </p>
-            <p><strong>Customer Relation Number (CRN):</strong> ${crn}</p>
-            <p><strong>Account Number:</strong> ${accountNumber}</p>
-            <p><strong>IFSC Code:</strong> ${ifscCode}</p>
-            <p><strong>Opening Balance:</strong> ${openingamount}</p>
-            <p><strong>Branch Address:</strong> ${branchFullAddress}</p>
+<div class="container">
+    <div class="header">
+        <img src="/resources/static/Images/home/logo.PNG" alt="Swadeshi Bank Logo">
 
-            <h2>Debit Card Details</h2>
-            <p><strong>Card Number:</strong> ${cardNumber}</p>
-            <p>For more card information, check on the Swadeshi Bank app under your account.</p>
-        </div>
-        <div class="footer">
-            <p>Thank you for choosing Swadeshi Bank. We look forward to serving you!</p>
-        </div>
     </div>
+
+    <div class="content">
+        <p>Dear <strong>${fullname}</strong>,</p>
+        <p>We are absolutely delighted to welcome you to the Swadeshi Bank family!</p>
+        <p>Your account has been successfully created, and we are excited to serve you with the best banking experience. Below are some details for your reference:</p>
+
+        <p><strong>Customer Relation Number (CRN): </strong>${crn}</p>
+
+        <p>All your account-related details have been compiled in the attached PDF document for your convenience. The password to access this PDF is a combination of your CRN number and your date of birth. For example, if your CRN is 645321 and your date of birth is January 1, 2020, the password would be 645321+112020.</p>
+
+        <p><strong>Please note:</strong></p>
+        <ul>
+            <li><strong>Password Format:</strong> [CRN Number]@[MMDDYYYY]</li>
+            <li><strong>Example:</strong> 645321@03082020 [645321 is CRN and March-8-2020]</li>
+        </ul>
+
+        <p>We kindly request you not to share this PDF or its password with anyone, as it contains sensitive information related to your account.</p>
+
+        <p>If you have any questions or need further assistance, please feel free to reach out to our customer support team.</p>
+
+        <p>Thank you for choosing Swadeshi Bank. We look forward to serving you!</p>
+    </div>
+
+    <div class="footer">
+        <p>Warm regards,</p>
+        <p>Shivam Sharma </p>
+        <p>Swadeshi Bank</p>
+        <p>Website URL</p>
+    </div>
+</div>
+
 </body>
 </html>

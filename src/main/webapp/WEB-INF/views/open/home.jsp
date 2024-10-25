@@ -297,7 +297,7 @@ a:hover {
                       <p>     finances anytime, anywhere. Enjoy competitive interest rates and exclusive savings plans to help you reach your financial goals faster. </p> 
                       <p>  Rest easy knowing your money is protected with top-notch security features and 24/7 customer support.
                             </p>
-                            <p><a class="btn btn-horizontal" href="#">Open Account</a></p>
+                            <p><a class="btn btn-horizontal" href="/swadeshiBank/v1/open-account">Open Account</a></p>
                         </div>
                     </div>
                 </div>

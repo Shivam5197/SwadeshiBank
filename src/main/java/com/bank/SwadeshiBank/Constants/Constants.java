@@ -40,4 +40,24 @@ public class Constants {
     	public static final String MALE    = "Male";
     	
     }
+
+    public static class status{
+        public static final Integer  ACTIVE= 0;
+        public static final Integer INACTIVE    = 1;
+        public static final Integer DISABLED    = 2;
+        public static final Integer BLOCKED = 3;
+    }
+
+    public static class transactionType{
+        public static final String CREDITED= "CREDIT";
+        public static final String DEBITED    = "DEBIT";
+    }
+
+    public static class transactionMethod{
+        public static final String UPI = "UPI";
+        public static final String NET_BANKING = "NET_BANKING";
+    }
+
+
+
 }

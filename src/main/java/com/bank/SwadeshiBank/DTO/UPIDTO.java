@@ -18,6 +18,7 @@ public class UPIDTO {
     private String upiId;
     private String ifscCode;
     private String contactNumber;
+    private Integer status;
 
     private String contactEmail;
     private String UPI_CODE;

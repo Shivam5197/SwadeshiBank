@@ -1,9 +1,12 @@
 package com.bank.SwadeshiBank.Utils;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomStringGenerator {
 
@@ -95,6 +98,20 @@ public class RandomStringGenerator {
 
         return email.toString();
     }
-    
-    
+
+    public static String generateRandomExpiryDate() {
+        // Current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Generate a random number of months (between 0 and 72 months, i.e., 6 years)
+        int randomMonths = ThreadLocalRandom.current().nextInt(1, 73); // 1 to 72 months
+
+        // Calculate the random expiry date
+        LocalDate expiryDate = currentDate.plusMonths(randomMonths);
+
+        // Format the date in MM/YY format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+        return expiryDate.format(formatter);
+    }
+
 }

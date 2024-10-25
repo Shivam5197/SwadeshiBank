@@ -92,7 +92,7 @@
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 		</dependency>
 		<!-- JSTL DEPENDENCIES -->
-		<!-- this Dpendecy is for JSON corversion  -->
+		<!-- these DEPENDENCIES are for JSON converstion  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -108,6 +108,25 @@
 			<version>2.17.1</version>
 		</dependency>
 		<!-- this Dpendecy is for JSON corversion  -->
+
+		<!--Depency for generating PDF -->
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/itext7-core -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext7-core</artifactId>
+			<version>7.2.4</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>html2pdf</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<!--Depency for generating PDF -->
+
+		<!-- to make the HTML to PDF conversion-->
+		<!-- to make the HTML to PDF conversion-->
 
 	</dependencies>
 	<build>

@@ -1,38 +1,59 @@
 package com.bank.SwadeshiBank.Entity;
 
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transactions extends BaseEntity{
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long transactionId;
-
-    private Long accountNumber;
+    private Long toAccountNumber;
     private String debitedOrCredited;
     private Long amount;
-    private LocalDateTime transactionTime;
+    private Long fromAccountNumber;
+    private String nameInAccount;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date transactionTime;
     private String bankName;
     private String ifscCode;
     private String transactionType;
+    private String creditedOrDebited;
+    private Long feeOrCharges;
+    private String transactionStatus;
 
 
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return super.toString();
+        }
+    }
+
+    // Automatically set the current time before persisting
+    @PrePersist
+    protected void onCreate() {
+        this.transactionTime = new Date();
+    }
 }

@@ -1,5 +1,6 @@
 package com.bank.SwadeshiBank.Exceptions.handler;
 
+import com.bank.SwadeshiBank.Exceptions.PaymentFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IncorrectUPIDetails.class)
     public ResponseEntity<ErrorResponse> handleIncorrectUPIDetails(IncorrectUPIDetails e){
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(),e.getMessage());
+        return  new ResponseEntity<>(errorResponse,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(PaymentFailureException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentFailureException(PaymentFailureException e){
 
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(),e.getMessage());
         return  new ResponseEntity<>(errorResponse,HttpStatus.FORBIDDEN);

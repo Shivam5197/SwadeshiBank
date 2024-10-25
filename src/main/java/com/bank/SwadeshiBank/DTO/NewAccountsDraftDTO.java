@@ -35,7 +35,8 @@ public class NewAccountsDraftDTO {
     private String organisation;
     private Long annualIncome;
     private Long initialFunds;
-
+    private Boolean UPIorNetBanking;
+    private String accountType;
     private String nominieFullName;
     private String nominieRelation;
     private String nominieAadharNumber;

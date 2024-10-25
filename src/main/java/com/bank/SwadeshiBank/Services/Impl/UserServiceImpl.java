@@ -1,11 +1,16 @@
 package com.bank.SwadeshiBank.Services.Impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.bank.SwadeshiBank.Constants.URLHelperConstants;
+import com.bank.SwadeshiBank.Utils.Documents.PDFGeneratorService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +55,10 @@ public class UserServiceImpl implements UsersService {
 	@Autowired
 	MailService mailService;
 
+	@Lazy
+	@Autowired
+	PDFGeneratorService pdfGeneratorService;
+
 //	@Autowired
 //	UPIService upiService;
 
@@ -69,10 +78,7 @@ public class UserServiceImpl implements UsersService {
 	
 					userEntity = UserMapper.mapToUsersEntity(userDto);
 					String rawPassword = RandomStringGenerator.generateRandomAlphanumericSpecial(16);
-					
-//						userEntity.setPassword(new BCryptPasswordEncoder()
-//								.encode(RandomStringGenerator.generateRandomAlphanumericSpecial(10)));
-						
+											
 					userEntity.setPassword(new BCryptPasswordEncoder()
 							.encode(rawPassword));
 						userEntity.setActive(Constants.UserActive.ACTIVE);
@@ -91,14 +97,14 @@ public class UserServiceImpl implements UsersService {
 						    authority.setAuthority(Constants.Authority.MANAGER);
 						    userEntity.addAuthority(authority);
 						}
-						
-						userEntity.setCRN(RandomStringGenerator.generateRandomNumeric(6).intValue());
+						int tempCRN = RandomStringGenerator.generateRandomNumeric(6).intValue();
+						userEntity.setCRN(tempCRN);
 						
 //						log.info("Entity we are going to save is : ---> {}", userEntity);
 						userEntity = userRepository.save(userEntity);
 
 //						log.info("Saved entity : ---> {}", userEntity);
-						AccountsDTO accountsDTO = accountService.createAccount(userEntity, userDto,errorList);
+						AccountsDTO accountsDTO = accountService.createAccount(userDto,errorList);
 						CardsDTO cardDTO = cardsService.createCards(userEntity, accountsDTO, errorList);
 
 
@@ -106,9 +112,38 @@ public class UserServiceImpl implements UsersService {
 						isCreated =true;
 
 						if(isCreated){
-							log.info(rawPassword);
+							// Format Branch Address
+							String BranchAddress = accountsDTO.getBranchAddress() + "<br>" + accountsDTO.getBranchCity() + ", "
+									+ accountsDTO.getBranchCity() + "<br>" + accountsDTO.getBranchPincode();
+
+							//log.info(rawPassword);
 //							userEntity.setPassword(rawPassword);
-							mailService.WelcomeMail(rawPassword,userEntity, accountsDTO,cardDTO,errorList);
+							Map<String , String> replacements = new HashMap<>();
+							replacements.put("accountNumber", accountsDTO.getAccountNumber().toString());
+							replacements.put("crn",userEntity.getCRN().toString());
+							replacements.put("ifscCode",accountsDTO.getIfscCode());
+							replacements.put("openingamount",accountsDTO.getInitialFunds().toString());
+							replacements.put("password",rawPassword);
+							replacements.put("branchFullAddress",BranchAddress);
+							replacements.put("cardNumber",cardDTO.getCardNumber().toString());
+							replacements.put("expiryDate",cardDTO.getExpiryDate());
+							replacements.put("cvv",cardDTO.getCvv().toString());
+							replacements.put("userID",accountsDTO.getNetBankingEntity().getUserName());
+							replacements.put("netBankingPassword",accountsDTO.getNetBankingEntity().getPassword());
+							replacements.put("upiID",accountsDTO.getUpiEntity().getUpiId());
+							replacements.put("upiPin",accountsDTO.getUpiEntity().getUPI_CODE());
+
+							log.info("{URLHelperConstants.WELCOMEMAILTEMPLET}"+URLHelperConstants.WELCOMEMAILTEMPLET);
+							//String templatePath = "src/main/resources/templates/DocumentTemplets/WelcomePDF.html";
+							String htmlContent = pdfGeneratorService.loadAndFillTemplate(URLHelperConstants.WELCOMEMAILTEMPLET, replacements);
+
+							String docPass = ( tempCRN+"@"+ Utils.formatDateToDDMMYYYY(userDto.getDateOfBirth().toString())).toString();
+//							log.info("Document Password : " +docPass);
+
+							byte[] pdfData = pdfGeneratorService.generateWelcomePDF(htmlContent, docPass);
+
+							//mailService.WelcomeMail(rawPassword,userEntity, accountsDTO,cardDTO,errorList);
+							mailService.WelcomeEmailWithAttachment(userEntity,accountsDTO,cardDTO,errorList,pdfData,"AccountDetails.pdf");
 						}
 
 			} else {
@@ -315,7 +350,6 @@ public class UserServiceImpl implements UsersService {
 	}
 
 
-
 	@Override
 	public List<Accounts> getUserAccounts(String userName, List<String> errorList){
 		UserDTO userDto = new UserDTO();
@@ -342,6 +376,48 @@ public class UserServiceImpl implements UsersService {
 		}
 
 return accounts;
+	}
+
+	/**
+	 * @param userName
+	 * @param errorList
+	 * @return
+	 */
+	@Override
+	public UserDTO getUserDetails(String userName, List<String> errorList) {
+
+		UserDTO userDTO = new UserDTO();
+
+		try {
+			if (!userName.isEmpty()){
+				Users users = userRepository.findByUserName(userName).orElseThrow(()-> new UsernameNotFoundException("User with provided username is not found"));
+				userDTO = UserMapper.mapToUsersDTO(users);
+				userDTO.setDateOfBirth(Utils.convertToDateMonthYear(users.getDateOfBirth().toString()));
+
+				log.info("User Creaeted" + userDTO +" :: User Date OF birth is  ::  "+ userDTO.getDateOfBirth());
+
+			}else {
+				errorList.add("Username cannot be empty! ");
+			}
+		} catch (UsernameNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		return userDTO;
+	}
+
+	/**
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public boolean deleteUserByUsername(String userName) {
+
+		boolean isDeleted = false;
+		Users user = userRepository.findByUserName(userName).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+				userRepository.delete(user);
+				isDeleted=true;
+
+		return isDeleted;
 	}
 
 

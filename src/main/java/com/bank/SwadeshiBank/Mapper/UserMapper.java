@@ -84,6 +84,7 @@ public class UserMapper {
     	userDTO.setOccupation(user.getOccupation());
     	userDTO.setOrganisation(user.getOrganisation());
     	userDTO.setAnnualIncome(user.getAnnualIncome());
+		userDTO.setCRN(user.getCRN());
 
     	userDTO.setNominieFullName(user.getNominieFullName());
     	userDTO.setNominieRelation(user.getNominieRelation());
